@@ -23,3 +23,12 @@ class Ability(models.Model):
 
     def __str__(self):
         return f'Abilities for: {self.character.name}'
+
+class Specialty(models.Model):
+    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+    spec_name = models.CharField(max_length=30)
+    damage = models.CharField(max_length=30)
+    move_list = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return f'Specialty for: {self.character.name}'

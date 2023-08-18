@@ -13,3 +13,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'Profile for: {self.character.name}'
+
+class Ability(models.Model):
+    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True)
+    combo_damage = models.IntegerField()
+    mobility = models.IntegerField()
+    wall_carry = models.IntegerField()
+    throw_game = models.IntegerField()
+
+    def __str__(self):
+        return f'Abilities for: {self.character.name}'

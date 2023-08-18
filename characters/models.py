@@ -6,3 +6,10 @@ class Character(models.Model):
 
     def __str__(self):
         return self.name
+
+class Profile(models.Model):
+    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f'Profile for: {self.character.name}'

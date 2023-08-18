@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Profile, Character, Ability, Specialty
 
-# Register your models here.
+admin.site.register(Character)
+admin.site.register(Profile)
+admin.site.register(Ability)
+admin.site.register(Specialty)

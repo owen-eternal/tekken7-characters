@@ -7,14 +7,14 @@ class Character(models.Model):
         return self.name
 
 class Profile(models.Model):
-    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True)
+    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True, related_name='profile')
     description = models.TextField()
 
     def __str__(self):
         return f'Profile for: {self.character.name}'
 
 class Ability(models.Model):
-    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True)
+    character = models.OneToOneField(Character, on_delete=models.CASCADE, primary_key=True, related_name='ability')
     combo_damage = models.IntegerField()
     mobility = models.IntegerField()
     wall_carry = models.IntegerField()
@@ -24,7 +24,7 @@ class Ability(models.Model):
         return f'Abilities for: {self.character.name}'
 
 class Specialty(models.Model):
-    character = models.ForeignKey(Character, on_delete=models.CASCADE)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name='specialties')
     spec_name = models.CharField(max_length=30)
     damage = models.CharField(max_length=30)
     move_list = models.CharField(max_length=100)

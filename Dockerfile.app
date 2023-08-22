@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
 WORKDIR /app
 USER app_user:app_user
 COPY --chown=app_user:app_user . .
+RUN python manage.py collectstatic --no-input
 CMD gunicorn \
       --reload \
       --bind 0.0.0.0:8000 \ 

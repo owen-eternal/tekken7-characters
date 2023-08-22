@@ -6,6 +6,9 @@ __pycache__
 db.sqlite3
 media
 
+# Docker #
+.dockerignore
+
 # Backup files # 
 *.bak 
 
@@ -103,7 +106,7 @@ env/
 venv/ 
 ENV/ 
 env.bak/ 
-venv.bak/ 
+venv.bak/
 
 # mkdocs documentation 
 /site 

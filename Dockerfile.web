@@ -1,3 +1,6 @@
 FROM nginx:latest
 
 RUN useradd -U app_user
+
+RUN install -d -m 0755 -o app_user -g app_user /usr/share/nginx/staticfiles \
+    && install -m 0644 -o app_user -g app_user /dev/null /var/run/nginx.pid

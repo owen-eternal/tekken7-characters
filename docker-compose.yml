@@ -18,8 +18,7 @@ services:
     depends_on:
       - app
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - django_static_volume:/home/app/staticfiles
+      - django_static_volume:/usr/share/nginx/staticfiles
 
 volumes:
   django_static_volume:

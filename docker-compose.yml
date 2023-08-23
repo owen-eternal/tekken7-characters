@@ -17,8 +17,10 @@ services:
       - 80:80
     depends_on:
       - app
+    env_file:
+      - ./.env/nginx.env
     volumes:
       - django_static_volume:/usr/share/nginx/staticfiles
-
+      
 volumes:
   django_static_volume:

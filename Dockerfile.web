@@ -1,4 +1,5 @@
 FROM nginx:latest
+LABEL contributor="Owen O. Phakade <olwethuphakade89@gmail.com>"
 
 RUN useradd -U app_user
 

@@ -12,3 +12,7 @@ RUN chown -R app_user:app_user \
     /var/cache/nginx \
     /var/log/nginx \
     /etc/nginx/conf.d
+
+USER app_user:app_user
+
+CMD ["nginx", "-g", "daemon off;"]

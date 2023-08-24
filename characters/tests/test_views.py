@@ -12,3 +12,8 @@ class CharacterViewSetTestCase(APITestCase):
     def test_character_list_statuscode_200(self):
         response = self.client.get(reverse("character-list"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_character_retrieve_statuscode_200(self):
+        response = self.client.get(reverse("character-detail", kwargs={"pk": 1}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Noctis')

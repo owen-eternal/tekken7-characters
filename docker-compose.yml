@@ -10,17 +10,21 @@ services:
       - ./.env/django.env
     volumes:
       - django_static_volume:/app/staticfiles
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
   web:
     container_name: nginx_container
     image: django_web:latest
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - app
     env_file:
       - ./.env/nginx.env
     volumes:
       - django_static_volume:/usr/share/nginx/staticfiles
-      
 volumes:
   django_static_volume:

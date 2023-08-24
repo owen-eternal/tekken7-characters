@@ -1,0 +1,8 @@
+.env
+env
+db.sqlite3
+htmlcov/
+Dockerfile.app
+Dockerfile.web
+README.md
+.coveragerc

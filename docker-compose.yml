@@ -26,5 +26,10 @@ services:
       - ./.env/nginx.env
     volumes:
       - django_static_volume:/usr/share/nginx/staticfiles
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
 volumes:
   django_static_volume:

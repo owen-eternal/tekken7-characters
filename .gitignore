@@ -6,9 +6,6 @@ __pycache__
 db.sqlite3
 media
 
-# Docker #
-.dockerignore
-
 # Backup files # 
 *.bak 
 

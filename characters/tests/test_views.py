@@ -4,4 +4,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 class CharacterViewSetTestCase(APITestCase):
-    pass
+
+    def setUp(self):
+        character_1 = Character.objects.create(name='Noctis')
+        character_2 = Character.objects.create(name='Bob')

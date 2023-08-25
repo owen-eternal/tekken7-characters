@@ -20,8 +20,6 @@ services:
     image: django_web:latest
     ports:
       - 8080:80
-    depends_on:
-      - app
     env_file:
       - ./.env/nginx.env
     volumes:
@@ -31,5 +29,17 @@ services:
         limits:
           cpus: '0.5'
           memory: 128M
+    depends_on:
+      - app
+  db:
+    container_name: postgres_container
+    image: postgres
+    env_file:
+      - ./.env/postgres.env
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 volumes:
   django_static_volume:

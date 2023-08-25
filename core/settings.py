@@ -11,6 +11,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+web_origin = os.environ['DJANGO_WEB_ORIGIN']
+db_user = os.environ['POSTGRES_USER']
+db_password = os.environ['POSTGRES_PASSWORD']
+db_engine = os.environ['DB_ENGINE']
+db_name = os.environ['DB_NAME']
+db_host = os.environ['DB_HOST']
+db_port = os.environ['DB_PORT']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +32,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2@#uu2nclsn5co=8^mvn99=f6zr+sbh9rpzb!z(+*8#5+!13x%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = [web_origin]
 
 # Application definition
 
@@ -78,8 +89,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': db_engine,
+        'NAME': db_name,
+        'USER': db_user,
+        'HOST': db_host,
+        'PORT': db_port,
+        'PASSWORD': db_password
     }
 }
 

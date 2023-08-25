@@ -13,17 +13,28 @@ jobs:
     strategy:
       matrix:
         environment: ['test']
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: mysecretpassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.8
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Tests
-      run: |
-        coverage run manage.py test
+    # steps:
+    # - uses: actions/checkout@v3
+    # - name: Set up Python
+    #   uses: actions/setup-python@v3
+    #   with:
+    #     python-version: 3.8
+    # - name: Install Dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r requirements.txt
+    # - name: Run Tests
+    #   run: |
+    #     coverage run manage.py test

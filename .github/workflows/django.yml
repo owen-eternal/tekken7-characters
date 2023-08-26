@@ -27,8 +27,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Test run
-      run: echo 'test run'
     - name: Set up Python
       uses: actions/setup-python@v3
       with:

@@ -40,6 +40,8 @@ jobs:
         pip install coverage
     - name: Run database migration
       run: python3 manage.py migrate
+    - name: Run linter
+      run: flake8 .
     - name: Run Tests
       run: |
         coverage run manage.py test

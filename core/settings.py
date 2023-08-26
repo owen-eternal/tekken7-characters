@@ -13,13 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
-web_origin = os.environ['DJANGO_WEB_ORIGIN']
-db_user = os.environ['POSTGRES_USER']
-db_password = os.environ['POSTGRES_PASSWORD']
-db_engine = os.environ['DB_ENGINE']
-db_name = os.environ['DB_NAME']
-db_host = os.environ['DB_HOST']
-db_port = os.environ['DB_PORT']
+web_origin = os.getenv('DJANGO_WEB_ORIGIN')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,12 +83,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': db_engine,
-        'NAME': db_name,
-        'USER': db_user,
-        'HOST': db_host,
-        'PORT': db_port,
-        'PASSWORD': db_password
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', 5432),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'mysecretpassword')
     }
 }
 

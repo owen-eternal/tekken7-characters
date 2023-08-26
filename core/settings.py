@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
-web_origin = os.getenv('DJANGO_WEB_ORIGIN')
+web_origin = os.getenv('DJANGO_WEB_ORIGIN', 'http://localhost:8080')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

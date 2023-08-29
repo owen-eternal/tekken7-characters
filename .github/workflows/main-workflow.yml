@@ -1,0 +1,21 @@
+name: Tekken7-CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-env:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      environ: test
+      deploy: false
+  
+  staging-env:
+    needs: test-env
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      environ: staging
+      deploy: false

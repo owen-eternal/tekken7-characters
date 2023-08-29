@@ -9,6 +9,9 @@ on:
       deploy:
         required: true
         type: boolean
+    secrets:
+      snyk_token:
+        required: true
 
 jobs:
   # build_test:
@@ -68,7 +71,7 @@ jobs:
     - name: Run Snyk to check Docker images for vulnerabilities
       uses: snyk/actions/docker@master
       env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        SNYK_TOKEN: ${{ inputs.snyk_token }}
       with:
         image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
         args: --severity-threshold=high

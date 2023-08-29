@@ -74,7 +74,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.snyk_token }}
         with:
           image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
-          args: --file=Dockerfile
+          args: --file=Dockerfile.app
         continue-on-error: true
 
       - name: Upload Sarif file

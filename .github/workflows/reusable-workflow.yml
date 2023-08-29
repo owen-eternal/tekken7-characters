@@ -60,3 +60,6 @@ jobs:
 
     - name: Build and Tag Tekken Image.
       run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .
+
+    - name: View Docker Image.
+      run: docker images

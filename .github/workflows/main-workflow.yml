@@ -7,24 +7,25 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-env:
+  test:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environ: test
-      deploy: false
     secrets:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
   
-  # staging-env:
-  #   needs: test-env
-  #   uses: ./.github/workflows/reusable-workflow.yml
-  #   with:
-  #     environ: staging
-  #     deploy: false
+  staging:
+    needs: test
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      environ: staging
+    secrets:
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
 
-  # prod-env:
-  #   needs: staging-env
-  #   uses: ./.github/workflows/reusable-workflow.yml
-  #   with:
-  #     environ: production
-  #     deploy: true
+  prod:
+    needs: staging
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      environ: production
+    secrets:
+      snyk_token: ${{ secrets.SNYK_TOKEN }}

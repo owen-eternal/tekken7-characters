@@ -11,27 +11,27 @@ on:
         type: boolean
 
 jobs:
-  build_test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
-    environment: ${{ inputs.environ }}
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: mysecretpassword
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-    - uses: actions/checkout@v3
+  # build_test:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.8]
+  #   environment: ${{ inputs.environ }}
+  #   services:
+  #     postgres:
+  #       image: postgres
+  #       env:
+  #         POSTGRES_USER: postgres
+  #         POSTGRES_PASSWORD: mysecretpassword
+  #       ports:
+  #         - 5432:5432
+  #       options: >-
+  #         --health-cmd pg_isready
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #   steps:
+  #   - uses: actions/checkout@v3
     # - name: Set up Python
     #   uses: actions/setup-python@v3
     #   with:
@@ -54,6 +54,9 @@ jobs:
     #     coverage run manage.py test
     #     coverage report
   
+  build_image:
+    runs-on: ubuntu-latest
+    steps:
     - name: Generate Short Commit SHA.
       id: short_sha
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
@@ -61,5 +64,10 @@ jobs:
     - name: Build and Tag Tekken Image.
       run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .
 
-    - name: View Docker Image.
-      run: docker images
+    - name: Run Snyk to check Docker images for vulnerabilities
+      uses: snyk/actions/docker@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
+        args: --severity-threshold=high

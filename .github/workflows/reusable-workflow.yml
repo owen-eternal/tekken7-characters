@@ -54,9 +54,10 @@ jobs:
     #     coverage run manage.py test
     #     coverage report
   
-    - name: Put Short Commit SHA
+    - name: Generate Short Commit SHA.
       id: short_sha
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
-    - name: Get Short Commit SHA
-      run: echo "SHA  ${{ steps.short_sha.outputs.short_sha }}"
+    - name: Build and Tag Tekken Image.
+      run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} \
+          -f Dockerfile.app .

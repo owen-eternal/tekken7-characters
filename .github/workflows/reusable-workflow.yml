@@ -74,4 +74,12 @@ jobs:
           SNYK_TOKEN: ${{ secrets.snyk_token }}
         with:
           image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
-          args: --severity-threshold=high
+          args: --file=Dockerfile
+        continue-on-error: true
+
+      - name: Upload Sarif file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+          category: ${{ inputs.environ }}-analysis-tool
+        

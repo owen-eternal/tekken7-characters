@@ -10,9 +10,10 @@ jobs:
   test-env:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
       environ: test
       deploy: false
+    secrets:
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
   
   # staging-env:
   #   needs: test-env

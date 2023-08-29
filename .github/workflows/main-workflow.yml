@@ -13,16 +13,16 @@ jobs:
       environ: test
       deploy: false
   
-  staging-env:
-    needs: test-env
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: staging
-      deploy: false
+  # staging-env:
+  #   needs: test-env
+  #   uses: ./.github/workflows/reusable-workflow.yml
+  #   with:
+  #     environ: staging
+  #     deploy: false
 
-  prod-env:
-    needs: staging-env
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: production
-      deploy: true
+  # prod-env:
+  #   needs: staging-env
+  #   uses: ./.github/workflows/reusable-workflow.yml
+  #   with:
+  #     environ: production
+  #     deploy: true

@@ -59,5 +59,4 @@ jobs:
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
     - name: Build and Tag Tekken Image.
-      run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} \
-          -f Dockerfile.app .
+      run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .

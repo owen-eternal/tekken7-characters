@@ -21,7 +21,7 @@ jobs:
       deploy: false
 
   prod-env:
-    needs: test-env
+    needs: staging-env
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environ: production

@@ -6,12 +6,12 @@ on:
       environ:
         required: true
         type: string
-      deploy:
+    secrets:
+      snyk_token:
         required: true
-        type: boolean
 
 jobs:
-  build_test:
+  build_app:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -53,3 +53,31 @@ jobs:
       run: |
         coverage run manage.py test
         coverage report
+  
+  build_image:
+    needs: build_app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate Short Commit SHA.
+        id: short_sha
+        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Build and Tag Tekken Image.
+        run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .
+
+      - name: Run Snyk to check Docker images for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+        with:
+          image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
+          args: --file=Dockerfile.app
+        continue-on-error: true
+
+      - name: Upload Sarif file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+          category: ${{ inputs.environ }}-analysis-tool
+        

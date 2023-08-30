@@ -64,8 +64,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build and Tag Tekken Image.
-        run: docker build -t ${GITHUB_REPOSITORY}:${GITHUB_RUN_NUMBER} -f Dockerfile.app .
+      # - name: Build and Tag Tekken Image.
+      #   run: docker build -t ${GITHUB_REPOSITORY}:${GITHUB_RUN_NUMBER} -f Dockerfile.app .
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1.7.0
@@ -73,6 +73,11 @@ jobs:
           role-to-assume: ${{ secrets.tekken7-oidc-role-arn }}
           aws-region: ${{ secrets.aws_region }}
 
+      - name: ECR Create Repo
+        run: |
+          aws ecr create-repository \
+          --repository-name ${GITHUB_REPOSITORY}
+      
       - name: ECR Describe Repository
         run: |
           aws ecr describe-repositories

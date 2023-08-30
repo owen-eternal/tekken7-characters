@@ -12,6 +12,7 @@ jobs:
     with:
       environ: test
       build_number: $GITHUB_RUN_NUMBER
+      repository: $GITHUB_REPOSITORY
     secrets:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
   

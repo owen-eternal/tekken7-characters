@@ -9,6 +9,9 @@ on:
       build_number:
         required: true
         type: string
+      repository:
+        required: true
+        type: string
     secrets:
       snyk_token:
         required: true
@@ -18,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get build number
-        run: echo "${{ inputs.build_number }}"
+        run: echo "${{ inputs.repository }}:${{ inputs.build_number }}"
   # build_app:
   #   runs-on: ubuntu-latest
   #   strategy:

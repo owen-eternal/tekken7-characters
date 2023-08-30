@@ -61,6 +61,7 @@ jobs:
         coverage report
   
   build_scan:
+    needs: build_test
     environment: ${{ inputs.environ }}
     runs-on: ubuntu-latest
     steps:

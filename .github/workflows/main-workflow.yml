@@ -5,6 +5,11 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
 
 jobs:
   test:
@@ -12,20 +17,7 @@ jobs:
     with:
       environ: test
     secrets:
+      aws-account-id: ${{ secrets.ACCOUNT_ID }}
+      aws_region: ${{ secrets.AWS_REGION}}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
-  
-  staging:
-    needs: test
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: staging
-    secrets:
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
-
-  prod:
-    needs: staging
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: production
-    secrets:
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+      tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}

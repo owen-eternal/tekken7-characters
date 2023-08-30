@@ -6,78 +6,85 @@ on:
       environ:
         required: true
         type: string
+      build_number:
+        required: true
+        type: string
     secrets:
       snyk_token:
         required: true
 
 jobs:
-  build_app:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
-    environment: ${{ inputs.environ }}
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: mysecretpassword
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install app dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install coverage flake8
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    - name: Lint with flake8
-      run: if [ flake8 . --count --show-source --statistics ]; then echo 'looking stylish 😎'; fi
-
-    - name: Run database migrations
-      run: python3 manage.py migrate
-
-    - name: Run unit tests
-      run: |
-        coverage run manage.py test
-        coverage report
-  
-  build_image:
-    needs: build_app
+  print:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Generate Short Commit SHA.
-        id: short_sha
-        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+      - name: Get build number
+        run: echo "${{ inputs.build_number }}"
+  # build_app:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.8]
+  #   environment: ${{ inputs.environ }}
+  #   services:
+  #     postgres:
+  #       image: postgres
+  #       env:
+  #         POSTGRES_USER: postgres
+  #         POSTGRES_PASSWORD: mysecretpassword
+  #       ports:
+  #         - 5432:5432
+  #       options: >-
+  #         --health-cmd pg_isready
+  #         --health-interval 10s
+  #         --health-timeout 5s
+  #         --health-retries 5
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
 
-      - name: Build and Tag Tekken Image.
-        run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .
+  #   - name: Install app dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install coverage flake8
+  #       if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run Snyk to check Docker images for vulnerabilities
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.snyk_token }}
-        with:
-          image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
-          args: --file=Dockerfile.app
-        continue-on-error: true
+  #   - name: Lint with flake8
+  #     run: if [ flake8 . --count --show-source --statistics ]; then echo 'looking stylish 😎'; fi
 
-      - name: Upload Sarif file
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
-          category: ${{ inputs.environ }}-analysis-tool
+  #   - name: Run database migrations
+  #     run: python3 manage.py migrate
+
+  #   - name: Run unit tests
+  #     run: |
+  #       coverage run manage.py test
+  #       coverage report
+  # build_image:
+  #   needs: build_app
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # - uses: actions/checkout@v3
+  #     - name: Get build number.
+  #       id: short_sha
+  #       run: echo "BUILD NUMBER- ${{ inputs.build_number }} "
+
+  #     # - name: Build and Tag Tekken Image.
+  #     #   run: docker build -t ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }} -f Dockerfile.app .
+
+  #     # - name: Run Snyk to check Docker images for vulnerabilities
+  #     #   uses: snyk/actions/docker@master
+  #     #   env:
+  #     #     SNYK_TOKEN: ${{ secrets.snyk_token }}
+  #     #   with:
+  #     #     image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
+  #     #     args: --file=Dockerfile.app
+  #     #   continue-on-error: true
+
+  #     # - name: Upload Sarif file
+  #     #   uses: github/codeql-action/upload-sarif@v2
+  #     #   with:
+  #     #     sarif_file: snyk.sarif
+  #     #     category: ${{ inputs.environ }}-analysis-tool
         

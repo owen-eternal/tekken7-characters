@@ -11,21 +11,22 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environ: test
+      build_number: $GITHUB_RUN_NUMBER
     secrets:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
   
-  staging:
-    needs: test
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: staging
-    secrets:
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+  # staging:
+  #   needs: test
+  #   uses: ./.github/workflows/reusable-workflow.yml
+  #   with:
+  #     environ: staging
+  #   secrets:
+  #     snyk_token: ${{ secrets.SNYK_TOKEN }}
 
-  prod:
-    needs: staging
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      environ: production
-    secrets:
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+  # prod:
+  #   needs: staging
+  #   uses: ./.github/workflows/reusable-workflow.yml
+  #   with:
+  #     environ: production
+  #   secrets:
+  #     snyk_token: ${{ secrets.SNYK_TOKEN }}

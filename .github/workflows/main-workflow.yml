@@ -17,6 +17,7 @@ jobs:
     with:
       environ: test
     secrets:
+      aws-account-id: ${{ secrets.ACCOUNT_ID }}
       aws_region: ${{ secrets.AWS_REGION}}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}

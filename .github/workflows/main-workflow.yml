@@ -11,6 +11,8 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environ: test
-      deploy: false
+      aws-ecr-repository: ${{ github.repository }}
+      version_tag: ${{ github.run_number }} 
     secrets:
+      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}

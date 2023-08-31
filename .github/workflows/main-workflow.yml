@@ -14,17 +14,3 @@ jobs:
       deploy: false
     secrets:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
-  
-  # staging-env:
-  #   needs: test-env
-  #   uses: ./.github/workflows/reusable-workflow.yml
-  #   with:
-  #     environ: staging
-  #     deploy: false
-
-  # prod-env:
-  #   needs: staging-env
-  #   uses: ./.github/workflows/reusable-workflow.yml
-  #   with:
-  #     environ: production
-  #     deploy: true

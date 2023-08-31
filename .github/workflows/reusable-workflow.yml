@@ -6,6 +6,9 @@ on:
       environ:
         required: true
         type: string
+      image_tag:
+        required: true
+        type: string
     secrets:
       aws-account-id:
         required: true
@@ -68,7 +71,7 @@ jobs:
     #     coverage report
 
     - name: Build Tekken Image.
-      run: docker build -t ${GITHUB_REPOSITORY}:${GITHUB_RUN_NUMBER} -f Dockerfile.app .
+      run: docker build -t ${{ inputs.image_tag }} -f Dockerfile.app .
 
     - name: Run Snyk to check Docker images for vulnerabilities
       uses: snyk/actions/docker@master
@@ -84,3 +87,6 @@ jobs:
       with:
         sarif_file: snyk.sarif
         category: ${{ inputs.environ }}-analysis-tool
+
+    - name: Tag Tekken Image.
+      run: docker tag ${{ inputs.image_tag }} ${{ secrets.aws-account-id }}.dkr.ecr.${{ secrets.aws_region }}.amazonaws.com/${{ inputs.image_tag }}

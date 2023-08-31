@@ -16,6 +16,7 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       environ: test
+      image_tag: ${GITHUB_REPOSITORY}:${GITHUB_RUN_NUMBER}
     secrets:
       aws-account-id: ${{ secrets.ACCOUNT_ID }}
       aws_region: ${{ secrets.AWS_REGION}}

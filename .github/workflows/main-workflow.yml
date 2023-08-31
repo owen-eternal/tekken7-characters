@@ -8,11 +8,10 @@ on:
 
 jobs:
   test-env:
-    uses: ./.github/workflows/reusable-workflow.yml
+    uses: ./.github/workflows/reusable-workflow.yml@main
     with:
       environ: test
-      aws-ecr-repository: ${{ github.repository }}
-      version_tag: ${{ github.run_number }} 
+      ecr-repo-tag: ${GITHUB_REPOSITORY}:${GITHUB_RUN_NUMBER} 
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}

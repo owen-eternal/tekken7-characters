@@ -3,13 +3,10 @@ name: Build, Test and Deploy Tekken7 API
 on:
   workflow_call:
     inputs:
-      aws-ecr-repository:
-        required: true
-        type: string
       environ:
         required: true
         type: string
-      version_tag:
+      ecr-repo-tag:
         required: true
         type: string
     secrets:
@@ -66,16 +63,16 @@ jobs:
     #   run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
     - name: Build Tekken Image.
-      run: docker build -t ${{ inputs.aws-ecr-repository}}:${{ inputs.version_tag }} -f Dockerfile.app .
+      run: docker build -t ${{ inputs.image-tag}} -f Dockerfile.app .
 
     - name: Tag Tekken Image.
-      run: docker tag ${{ inputs.aws-ecr-repository}}:${{ inputs.version_tag }} ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repository}}:${{ inputs.version_tag }}
+      run: docker tag ${{ inputs.ecr-repo-tag }} ${{ secrets.aws-ecr-registry }}/${{ inputs.ecr-repo-tag }}
 
     - name: Run Snyk to check Docker images for vulnerabilities
       uses: snyk/actions/docker@master
       env:
         SNYK_TOKEN: ${{ secrets.snyk_token }}
       with:
-        image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repository}}:${{ inputs.version_tag }}
+        image: ${{ secrets.aws-ecr-registry }}/${{ inputs.ecr-repo-tag }}
         args: --file=Dockerfile.app
       continue-on-error: true

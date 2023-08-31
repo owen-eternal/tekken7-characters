@@ -56,7 +56,6 @@ jobs:
       run: |
         coverage run manage.py test
         coverage report
-        
     - name: Generate Short Commit SHA.
       id: short_sha
       run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
@@ -70,7 +69,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.snyk_token }}
       with:
         image: ${{ inputs.environ }}-tekken-image:${{ steps.short_sha.outputs.short_sha }}
-        args: --file=Dockerfile
+        args: --file=Dockerfile.app
       continue-on-error: true
 
     - name: Upload Sarif file

@@ -3,7 +3,7 @@ on:
     inputs:
       deploy:
         required: true
-        type: string
+        type: boolean
       environ:
         required: true
         type: string
@@ -45,7 +45,7 @@ jobs:
     #       --health-retries 5
     steps:
     - name: debug.
-      # if: github.ref == 'refs/heads/merge' && github.event_name == 'pull_request' && inputs.deploy == true
+      # if: github.ref == 'refs/pull/25/merge' && github.event_name == 'pull_request' && inputs.deploy == true
       run: echo "${{ github.ref }} -- ${{ github.event_name }} -- ${{ inputs.deploy }}"
     # - uses: actions/checkout@v3
   

@@ -89,4 +89,4 @@ jobs:
         aws-region: ${{ secrets.aws-region }}
     
     - name: Test to see if GH authenticates with AWS
-      run: Docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+      run: docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}

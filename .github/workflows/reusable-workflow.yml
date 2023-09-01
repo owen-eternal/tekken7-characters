@@ -88,5 +88,7 @@ jobs:
         role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
         aws-region: ${{ secrets.aws-region }}
     
-    - name: Test to see if GH authenticates with AWS
-      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
+    - name: Authenticate and push Tekken image to ECR Registy Repo.
+      run: |
+        aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
+        docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} 

@@ -88,7 +88,8 @@ jobs:
         role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
         aws-region: ${{ secrets.aws-region }}
     
-    - name: Authenticate and push Tekken image to ECR Registy Repo.
+    - name: Authenticate and Publish Tekken image to ECR Registy Repo.
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
         docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} 

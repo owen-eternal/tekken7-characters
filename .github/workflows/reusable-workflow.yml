@@ -17,6 +17,10 @@ on:
         required: true
       aws-ecr-registry:
         required: true
+      aws-tekken7-oidc-role-arn:
+        required: true
+      aws-region:
+        required: true
 
 jobs:
   build_test:
@@ -77,3 +81,15 @@ jobs:
         image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
         args: --file=Dockerfile.app
       continue-on-error: true
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
+        aws-region: ${{ secrets.aws-region }}
+    
+    - name: Authenticate and Publish Tekken image to ECR Registy Repo.
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
+        docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} 

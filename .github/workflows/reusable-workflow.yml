@@ -89,4 +89,4 @@ jobs:
         aws-region: ${{ secrets.aws-region }}
     
     - name: Test to see if GH authenticates with AWS
-      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ inputs.aws-ecr-repo }}
+      run: aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}

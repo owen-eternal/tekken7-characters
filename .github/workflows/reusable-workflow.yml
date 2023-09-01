@@ -3,7 +3,7 @@ on:
     inputs:
       deploy:
         required: true
-        type: boolean
+        type: string
       environ:
         required: true
         type: string

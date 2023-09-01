@@ -44,6 +44,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      
     - uses: actions/checkout@v3
   
     - name: Set Up Python Environment.
@@ -87,7 +88,7 @@ jobs:
         aws-region: ${{ secrets.aws-region }}
 
     - name: Publish Tekken Image.
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && github.event.inputs.deploy == 'true'
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
       run: |
         aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
         docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}

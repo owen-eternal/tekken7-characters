@@ -26,6 +26,7 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
   
   staging:
+    needs: test
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       deploy: false
@@ -39,6 +40,7 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
 
   production:
+    needs: staging
     uses: ./.github/workflows/reusable-workflow.yml
     with:
       deploy: true

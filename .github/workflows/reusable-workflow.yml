@@ -47,7 +47,7 @@ jobs:
           --health-retries 5
     steps:
       - name: Only run this stage if deploy == true.
-        if: ${{ inputs.deploy == true}}
+        if: ${{ inputs.deploy }} == 'true'
         run: echo "Testing if Deploy is true"
     # - uses: actions/checkout@v3
   

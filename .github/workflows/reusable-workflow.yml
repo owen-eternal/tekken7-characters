@@ -44,12 +44,6 @@ jobs:
           --health-retries 5
     steps:
     - uses: actions/checkout@v3
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1.7.0
-      with:
-        role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
-        aws-region: ${{ secrets.aws-region }}
   
     # - name: Set up Python
     #   uses: actions/setup-python@v3
@@ -87,6 +81,12 @@ jobs:
     #     image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
     #     args: --file=Dockerfile.app
     #   continue-on-error: true
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1.7.0
+      with:
+        role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
+        aws-region: ${{ secrets.aws-region }}
     
     # - name: Test to see if GH authenticates with AWS
     #   run: Docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}

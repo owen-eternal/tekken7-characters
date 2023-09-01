@@ -15,6 +15,32 @@ jobs:
   test:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
+      deploy: false
+      environ: test
+      aws-ecr-repo: ${{ github.repository }}
+      image-version: ${{ github.run_number }}
+    secrets:
+      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
+      aws-region: ${{ secrets.AWS_REGION }}
+      aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
+  
+  staging:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      deploy: false
+      environ: test
+      aws-ecr-repo: ${{ github.repository }}
+      image-version: ${{ github.run_number }}
+    secrets:
+      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
+      aws-region: ${{ secrets.AWS_REGION }}
+      aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
+
+  production:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
       deploy: true
       environ: test
       aws-ecr-repo: ${{ github.repository }}

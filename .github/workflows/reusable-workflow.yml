@@ -70,8 +70,8 @@ jobs:
     #   id: short_sha
     #   run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
-    # - name: Build + Tag Tekken Image.
-    #   run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
+    - name: Build + Tag Tekken Image.
+      run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 
     # - name: Run Snyk to check Docker images for vulnerabilities
     #   uses: snyk/actions/docker@master
@@ -88,5 +88,5 @@ jobs:
         role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
         aws-region: ${{ secrets.aws-region }}
     
-    # - name: Test to see if GH authenticates with AWS
-    #   run: Docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+    - name: Test to see if GH authenticates with AWS
+      run: Docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}

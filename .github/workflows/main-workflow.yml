@@ -15,7 +15,7 @@ jobs:
   test-env:
     uses: ./.github/workflows/reusable-workflow.yml
     with:
-      deploy: false
+      deploy: true
       environ: test
       aws-ecr-repo: ${{ github.repository }}
       image-version: ${{ github.run_number }}

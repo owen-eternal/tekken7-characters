@@ -45,7 +45,7 @@ jobs:
     #       --health-retries 5
     steps:
     - name: debug.
-      if: github.ref == 'refs/heads/merge' && github.event_name == 'pull_request' && ${{ inputs.deploy }} == true
+      if: github.ref == 'refs/heads/merge' && github.event_name == 'pull_request' && ${{ inputs.deploy == true }} 
       run: echo "True"
     # - uses: actions/checkout@v3
   

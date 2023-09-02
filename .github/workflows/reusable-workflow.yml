@@ -1,35 +1,23 @@
+name: Tekken7-CI
+
 on:
-  workflow_call:
-    inputs:
-      deploy:
-        required: true
-        type: boolean
-      environ:
-        required: true
-        type: string
-      aws-ecr-repo:
-        required: true
-        type: string
-      image-version:
-        required: true
-        type: string
-    secrets:
-      snyk_token:
-        required: true
-      aws-ecr-registry:
-        required: true
-      aws-tekken7-oidc-role-arn:
-        required: true
-      aws-region:
-        required: true
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
+  ECR_REPO: ${GITHUB_REPOSITORY}
+  IMAGE_VERSION: ${GITHUB_RUN_NUMBER}
+  REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
-  CICD:
+  buildTestPublish:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
-    environment: ${{ inputs.environ }}
+        python-version: [3.8, 3.9]
     services:
       postgres:
         image: postgres
@@ -52,14 +40,15 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install Tekken Dependencies.
+    - name: Install application Dependencies.
       run: |
         python -m pip install --upgrade pip
         pip install coverage flake8
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Run Stylistic Checks
-      run: if [ flake8 . --count --show-source --statistics ]; then echo 'looking stylish 😎'; fi
+      run: flake8 . --count --show-source --statistics
+      continue-on-error: true
 
     - name: Run Database Migrations.
       run: python3 manage.py migrate
@@ -69,26 +58,27 @@ jobs:
         coverage run manage.py test
         coverage report
 
-    - name: Build + Tag Tekken Image.
-      run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
+    - name: Build + Tag Image.
+      run: docker build -t ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.IMAGE_VERSION }} -f Dockerfile.app .
 
-    - name: Scan Tekken Image.
+    - name: Scan Docker Image with Snyk.
       uses: snyk/actions/docker@master
       env:
         SNYK_TOKEN: ${{ secrets.snyk_token }}
       with:
-        image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.IMAGE_VERSION }}
         args: --file=Dockerfile.app
       continue-on-error: true
     
-    - name: Assume TekkenOIDCRole.
-      uses: aws-actions/configure-aws-credentials@v1.7.0
-      with:
-        role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
-        aws-region: ${{ secrets.aws-region }}
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v1.7.0
+    #   with:
+    #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     aws-region: ${{ env.REGION }}
 
-    - name: Publish Tekken Image.
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
-      run: |
-        aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
-        docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+    # - name: Publish Docker Image.
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: |
+    #     aws ecr get-login-password --region ${{ env.REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY}}
+    #     docker push ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.IMAGE_VERSION }}

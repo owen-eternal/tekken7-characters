@@ -8,8 +8,8 @@ on:
 
 env:
   ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
-  ECR_REPO: ${GITHUB_REPOSITORY}
-  IMAGE_VERSION: ${GITHUB_RUN_NUMBER}
+  ECR_REPO: ${{ github.repository }}
+  IMAGE_VERSION: ${{ github.run_number }}
   REGION: ${{ secrets.AWS_REGION }}
 
 jobs:

@@ -1,54 +1,54 @@
-name: Tekken7-CI
+# name: Tekken7-CI
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-permissions:
-  id-token: write
-  contents: read
-  pull-requests: write
+# permissions:
+#   id-token: write
+#   contents: read
+#   pull-requests: write
 
-jobs:
-  test:
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      deploy: false
-      environ: test
-      aws-ecr-repo: ${{ github.repository }}
-      image-version: ${{ github.run_number }}
-    secrets:
-      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
-      aws-region: ${{ secrets.AWS_REGION }}
-      aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+# jobs:
+#   test:
+#     uses: ./.github/workflows/reusable-workflow.yml
+#     with:
+#       deploy: false
+#       environ: test
+#       aws-ecr-repo: ${{ github.repository }}
+#       image-version: ${{ github.run_number }}
+#     secrets:
+#       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
+#       aws-region: ${{ secrets.AWS_REGION }}
+#       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
+#       snyk_token: ${{ secrets.SNYK_TOKEN }}
   
-  staging:
-    needs: test
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      deploy: false
-      environ: staging
-      aws-ecr-repo: ${{ github.repository }}
-      image-version: ${{ github.run_number }}
-    secrets:
-      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
-      aws-region: ${{ secrets.AWS_REGION }}
-      aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+#   staging:
+#     needs: test
+#     uses: ./.github/workflows/reusable-workflow.yml
+#     with:
+#       deploy: false
+#       environ: staging
+#       aws-ecr-repo: ${{ github.repository }}
+#       image-version: ${{ github.run_number }}
+#     secrets:
+#       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
+#       aws-region: ${{ secrets.AWS_REGION }}
+#       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
+#       snyk_token: ${{ secrets.SNYK_TOKEN }}
 
-  production:
-    needs: staging
-    uses: ./.github/workflows/reusable-workflow.yml
-    with:
-      deploy: true
-      environ: production
-      aws-ecr-repo: ${{ github.repository }}
-      image-version: ${{ github.run_number }}
-    secrets:
-      aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
-      aws-region: ${{ secrets.AWS_REGION }}
-      aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
-      snyk_token: ${{ secrets.SNYK_TOKEN }}
+#   production:
+#     needs: staging
+#     uses: ./.github/workflows/reusable-workflow.yml
+#     with:
+#       deploy: true
+#       environ: production
+#       aws-ecr-repo: ${{ github.repository }}
+#       image-version: ${{ github.run_number }}
+#     secrets:
+#       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
+#       aws-region: ${{ secrets.AWS_REGION }}
+#       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
+#       snyk_token: ${{ secrets.SNYK_TOKEN }}

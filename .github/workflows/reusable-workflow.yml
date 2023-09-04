@@ -22,6 +22,8 @@ on:
         required: true
       aws-region:
         required: true
+      test_reporter_id:
+        required: true
 
 jobs:
   CICD:
@@ -64,10 +66,11 @@ jobs:
     - name: Run Database Migrations.
       run: python3 manage.py migrate
 
-    - name: Run Unit Tests
+    - name: Run Unit Tests and Generate Coverage report.
       run: |
         coverage run manage.py test
         coverage report
+        coverage lcov
 
     - name: Build + Tag Tekken Image.
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
@@ -86,6 +89,14 @@ jobs:
       with:
         role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
         aws-region: ${{ secrets.aws-region }}
+
+    - name: Publish Coverage Report.
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
+      uses: paambaati/codeclimate-action@v5.0.0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
+      with:
+        coverageLocations: ./coverage.lcov:lcov
 
     - name: Publish Tekken Image.
       if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true

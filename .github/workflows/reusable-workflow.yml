@@ -71,7 +71,9 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
       with:
-        coverageCommand: coverage run manage.py test
+        coverageCommand: |
+          coverage run manage.py test
+          coverage lcov
         debug: true
 
     # - name: Run Unit Tests

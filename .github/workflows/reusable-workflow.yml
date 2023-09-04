@@ -22,6 +22,8 @@ on:
         required: true
       aws-region:
         required: true
+      test_reporter_id:
+        required: true
 
 jobs:
   CICD:
@@ -64,10 +66,18 @@ jobs:
     - name: Run Database Migrations.
       run: python3 manage.py migrate
 
-    - name: Run Unit Tests
-      run: |
-        coverage run manage.py test
-        coverage report
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v5.0.0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
+      with:
+        coverageCommand: coverage run manage.py test
+        debug: true
+
+    # - name: Run Unit Tests
+    #   run: |
+    #     coverage run manage.py test
+    #     coverage report
 
     - name: Build + Tag Tekken Image.
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .

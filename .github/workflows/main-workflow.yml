@@ -24,6 +24,7 @@ jobs:
       aws-region: ${{ secrets.AWS_REGION }}
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
+      test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
   
   staging:
     needs: test
@@ -38,6 +39,7 @@ jobs:
       aws-region: ${{ secrets.AWS_REGION }}
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
+      test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
 
   production:
     needs: staging
@@ -52,3 +54,4 @@ jobs:
       aws-region: ${{ secrets.AWS_REGION }}
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
+      test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}

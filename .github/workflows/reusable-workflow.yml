@@ -24,6 +24,8 @@ on:
         required: true
       test_reporter_id:
         required: true
+      django_secret_key:
+        required: true
 
 jobs:
   CICD:
@@ -67,12 +69,16 @@ jobs:
       run: python3 manage.py migrate
 
     - name: Run Unit Tests and Generate Coverage report.
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: |
         coverage run manage.py test
         coverage report
         coverage lcov
 
     - name: Build + Tag Tekken Image.
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 
     - name: Scan Tekken Image.

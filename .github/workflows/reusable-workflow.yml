@@ -66,20 +66,21 @@ jobs:
     - name: Run Database Migrations.
       run: python3 manage.py migrate
 
-    - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v5.0.0
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
-      with:
-        coverageCommand: |
-          coverage run manage.py test
-          coverage lcov
-        debug: true
+    # - name: Test & publish code coverage
+    #   uses: paambaati/codeclimate-action@v5.0.0
+    #   env:
+    #     CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
+    #   with:
+    #     coverageCommand: |
+    #       coverage run manage.py test
+    #       coverage lcov
+    #     debug: true
 
-    # - name: Run Unit Tests
-    #   run: |
-    #     coverage run manage.py test
-    #     coverage report
+    - name: Run Unit Tests and generate coverage report
+      run: |
+        coverage run manage.py test
+        coverage lcov
+        ls
 
     - name: Build + Tag Tekken Image.
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .

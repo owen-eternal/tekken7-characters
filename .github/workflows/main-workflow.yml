@@ -51,9 +51,10 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
-      database_user: ${{ secrets.POSTGRES_USER }}
+      database_user: ${{ secrets.DB_USER }}
       database_host: ${{ secrets.DB_HOST }}
-      database_password: ${{ secrets.POSTGRES_PASSWORD }}
+      database_password: ${{ secrets.DB_PASSWORD }}
+
 
   production:
     needs: staging
@@ -73,6 +74,6 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
-      database_user: ${{ secrets.POSTGRES_USER }}
+      database_user: ${{ secrets.DB_USER }}
       database_host: ${{ secrets.DB_HOST }}
-      database_password: ${{ secrets.POSTGRES_PASSWORD }}
+      database_password: ${{ secrets.DB_PASSWORD }}

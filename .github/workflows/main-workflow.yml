@@ -19,6 +19,9 @@ jobs:
       environ: test
       aws-ecr-repo: ${{ github.repository }}
       image-version: ${{ github.run_number }}
+      database_engine: ${{ vars.DB_ENGINE }}
+      database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -26,6 +29,9 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.DB_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.DB_PASSWORD }}
   
   staging:
     needs: test
@@ -35,6 +41,9 @@ jobs:
       environ: staging
       aws-ecr-repo: ${{ github.repository }}
       image-version: ${{ github.run_number }}
+      database_engine: ${{ vars.DB_ENGINE }}
+      database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -42,6 +51,10 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.DB_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.DB_PASSWORD }}
+
 
   production:
     needs: staging
@@ -51,6 +64,9 @@ jobs:
       environ: production
       aws-ecr-repo: ${{ github.repository }}
       image-version: ${{ github.run_number }}
+      database_engine: ${{ vars.DB_ENGINE }}
+      database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -58,3 +74,6 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.DB_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.DB_PASSWORD }}

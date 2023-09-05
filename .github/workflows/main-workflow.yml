@@ -21,6 +21,7 @@ jobs:
       image-version: ${{ github.run_number }}
       database_engine: ${{ vars.DB_ENGINE }}
       database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -28,6 +29,7 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.POSTGRES_USER }}
   
   staging:
     needs: test
@@ -39,6 +41,7 @@ jobs:
       image-version: ${{ github.run_number }}
       database_engine: ${{ vars.DB_ENGINE }}
       database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -46,6 +49,7 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.POSTGRES_USER }}
 
   production:
     needs: staging
@@ -57,6 +61,7 @@ jobs:
       image-version: ${{ github.run_number }}
       database_engine: ${{ vars.DB_ENGINE }}
       database_name: ${{ vars.DB_NAME }}
+      database_port: ${{ vars.DB_PORT }}
     secrets:
       aws-ecr-registry: ${{ secrets.AWS_ECR_REGISTRY }}
       aws-region: ${{ secrets.AWS_REGION }}
@@ -64,3 +69,4 @@ jobs:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
+      database_user: ${{ secrets.POSTGRES_USER }}

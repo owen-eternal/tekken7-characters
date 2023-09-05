@@ -19,6 +19,9 @@ on:
       database_name:
         required: true
         type: string
+      database_port:
+        required: true
+        type: number
     secrets:
       snyk_token:
         required: true
@@ -31,6 +34,8 @@ on:
       test_reporter_id:
         required: true
       django_secret_key:
+        required: true
+      database_user:
         required: true
 
 jobs:
@@ -54,7 +59,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      
     - uses: actions/checkout@v3
   
     - name: Set Up Python Environment.
@@ -78,6 +82,8 @@ jobs:
       env:
         DB_ENGINE: ${{ inputs.database_engine }}
         DB_NAME: ${{ inputs.database_name }}
+        DB_PORT: ${{ inputs.database_port }}
+        DB_USER: ${{ secrets.database_user }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: |
         coverage run manage.py test
@@ -88,6 +94,8 @@ jobs:
       env:
         DB_ENGINE: ${{ inputs.database_engine }}
         DB_NAME: ${{ inputs.database_name }}
+        DB_PORT: ${{ inputs.database_port }}
+        DB_USER: ${{ secrets.database_user }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 

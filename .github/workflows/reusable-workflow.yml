@@ -45,14 +45,6 @@ on:
 jobs:
   CICD:
     runs-on: ubuntu-latest
-    env:
-      DB_ENGINE: ${{ inputs.database_engine }}
-      DB_NAME: ${{ inputs.database_name }}
-      DB_PORT: ${{ inputs.database_port }}
-      DB_USER: ${{ secrets.database_user }}
-      DB_HOST: ${{ secrets.database_host }}
-      DB_PASSWORD: ${{ secrets.database_password }}
-      DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
     strategy:
       matrix:
         python-version: [3.8]
@@ -70,6 +62,14 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      DB_ENGINE: ${{ inputs.database_engine }}
+      DB_NAME: ${{ inputs.database_name }}
+      DB_PORT: ${{ inputs.database_port }}
+      DB_USER: ${{ secrets.database_user }}
+      DB_HOST: ${{ secrets.database_host }}
+      DB_PASSWORD: ${{ secrets.database_password }}
+      DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
 
     steps:
       - uses: actions/checkout@v3

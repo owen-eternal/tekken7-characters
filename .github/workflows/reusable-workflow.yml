@@ -21,7 +21,7 @@ on:
         type: string
       database_port:
         required: true
-        type: number
+        type: string
     secrets:
       snyk_token:
         required: true

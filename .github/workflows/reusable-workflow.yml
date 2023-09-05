@@ -37,6 +37,10 @@ on:
         required: true
       database_user:
         required: true
+      database_host:
+        required: true
+      database_password:
+        required: true
 
 jobs:
   CICD:
@@ -84,6 +88,8 @@ jobs:
         DB_NAME: ${{ inputs.database_name }}
         DB_PORT: ${{ inputs.database_port }}
         DB_USER: ${{ secrets.database_user }}
+        DB_HOST: ${{ secrets.database_host }}
+        DB_PASSWORD: ${{ secrets.database_password }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: |
         coverage run manage.py test
@@ -96,6 +102,8 @@ jobs:
         DB_NAME: ${{ inputs.database_name }}
         DB_PORT: ${{ inputs.database_port }}
         DB_USER: ${{ secrets.database_user }}
+        DB_HOST: ${{ secrets.database_host }}
+        DB_PASSWORD: ${{ secrets.database_password }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 

@@ -30,6 +30,8 @@ jobs:
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
       database_user: ${{ secrets.POSTGRES_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.POSTGRES_PASSWORD }}
   
   staging:
     needs: test
@@ -50,6 +52,8 @@ jobs:
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
       database_user: ${{ secrets.POSTGRES_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.POSTGRES_PASSWORD }}
 
   production:
     needs: staging
@@ -70,3 +74,5 @@ jobs:
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
       django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
       database_user: ${{ secrets.POSTGRES_USER }}
+      database_host: ${{ secrets.DB_HOST }}
+      database_password: ${{ secrets.POSTGRES_PASSWORD }}

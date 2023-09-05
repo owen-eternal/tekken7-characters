@@ -25,6 +25,7 @@ jobs:
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
+      django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
   
   staging:
     needs: test
@@ -40,6 +41,7 @@ jobs:
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
+      django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}
 
   production:
     needs: staging
@@ -55,3 +57,4 @@ jobs:
       aws-tekken7-oidc-role-arn: ${{ secrets.AWS_TEKKEN7_OIDC_ROLE_ARN }}
       snyk_token: ${{ secrets.SNYK_TOKEN }}
       test_reporter_id: ${{ secrets.TEST_REPORTER_ID }}
+      django_secret_key: ${{ secrets.DJANGO_SECRET_KEY }}

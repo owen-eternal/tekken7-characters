@@ -13,6 +13,12 @@ on:
       image-version:
         required: true
         type: string
+      database_engine:
+        required: true
+        type: string
+      database_name:
+        required: true
+        type: string
     secrets:
       snyk_token:
         required: true
@@ -70,6 +76,8 @@ jobs:
 
     - name: Run Unit Tests and Generate Coverage report.
       env:
+        DB_ENGINE: ${{ inputs.database_engine }}
+        DB_NAME: ${{ inputs.database_name }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: |
         coverage run manage.py test
@@ -78,6 +86,8 @@ jobs:
 
     - name: Build + Tag Tekken Image.
       env:
+        DB_ENGINE: ${{ inputs.database_engine }}
+        DB_NAME: ${{ inputs.database_name }}
         DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 

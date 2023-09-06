@@ -128,3 +128,9 @@ jobs:
         run: |
           aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
           docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+
+  infra:
+    runs-on: ubuntu
+    steps:
+      - name: echoo
+        run: echo "test run"

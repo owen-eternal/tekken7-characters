@@ -77,6 +77,3 @@ jobs:
       database_user: ${{ secrets.DB_USER }}
       database_host: ${{ secrets.DB_HOST }}
       database_password: ${{ secrets.DB_PASSWORD }}
-
-  infra:
-    uses: ./.github/workflows/aws-infra.yml

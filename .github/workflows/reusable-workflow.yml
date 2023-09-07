@@ -50,7 +50,7 @@ jobs:
       - name: infra
         env:
           IMAGE_TAG: ${{ needs.app.outputs.tk7image }}
-        run: echo "$IMAGE_TAG"
+        run: echo "hello $IMAGE_TAG"
 
   app:
     runs-on: ubuntu-latest

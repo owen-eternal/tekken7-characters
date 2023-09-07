@@ -43,18 +43,18 @@ on:
         required: true
 
 jobs:
-  infra:
-    needs: app
-    runs-on: ubuntu-latest
-    steps:
-      - name: infra
-        env:
-          IMAGE_TAG: ${{ needs.app.outputs.image_tag }}
-        run: echo "$IMAGE_TAG"
+  # infra:
+  #   needs: app
+  #   runs-on: ubuntu-latest
+  #   steps:
+      # - name: infra
+        # env:
+        #   IMAGE_TAG: ${{ needs.app.outputs.image_tag }}
+        # run: echo "$IMAGE_TAG"
   app:
     runs-on: ubuntu-latest
-    outputs:
-      image_tag: ${{ steps.image_tag.outputs.tag }}
+    # outputs:
+    #   image_tag: ${{ steps.image_tag.outputs.tag }}
     environment: ${{ inputs.environ }}
     # services:
     #   postgres:
@@ -79,11 +79,11 @@ jobs:
     #   DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
 
     steps:
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name:
-        id: image_tag
-        run: echo "tag=image:some_image" >> "$GITHUB_OUTPUT"
+      # - name:
+      #   id: image_tag
+      #   run: echo "tag=image:some_image" >> "$GITHUB_OUTPUT"
     
       # - name: Set Up Python Environment.
       #   uses: actions/setup-python@v3
@@ -108,8 +108,19 @@ jobs:
       #     coverage report
       #     coverage lcov
 
-      # - name: Build + Tag Tekken Image.
-      #   run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build
+        id: image_tag
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile.app
+          context: .
+          tags: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+      
+      - name: test output
+        run: echo "${{ steps.image_tag.outputs }}"
 
       # - name: Scan Tekken Image.
       #   uses: snyk/actions/docker@master

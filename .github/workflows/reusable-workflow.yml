@@ -49,12 +49,13 @@ jobs:
     steps:
       - name: infra
         env:
-          IMAGE_TAG: ${{ needs.app.outputs.image_tag }}
+          IMAGE_TAG: ${{ needs.app.outputs.tekken_image }}
         run: echo "$IMAGE_TAG"
+
   app:
     runs-on: ubuntu-latest
     outputs:
-      image_tag: ${{ steps.image_tag.outputs.tag }}
+      tekken_image: ${{ steps.image_build.outputs.tekken_image }}
     environment: ${{ inputs.environ }}
     # services:
     #   postgres:
@@ -80,10 +81,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name:
-        id: image_tag
-        run: echo "tag=image:some_image" >> "$GITHUB_OUTPUT"
     
       # - name: Set Up Python Environment.
       #   uses: actions/setup-python@v3
@@ -114,10 +111,7 @@ jobs:
           IMAGE: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
         run: |
           docker build -t $IMAGE -f Dockerfile.app .
-          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
-
-      - name: echo output
-        run: echo "${{ steps.image_build.outputs.image }}"
+          echo "tekken_image=$IMAGE" >> "$GITHUB_OUTPUT"
 
       # - name: Scan Tekken Image.
       #   uses: snyk/actions/docker@master

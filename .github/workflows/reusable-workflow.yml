@@ -114,7 +114,7 @@ jobs:
           IMAGE: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
         run: |
           docker build -t $IMAGE -f Dockerfile.app .
-          echo "image=(docker images | tail -n +2 | head -n 1)"
+          echo "image=$(docker images | tail -n +2 | head -n 1)"
 
       - name: echo output
         run: echo "${{ steps.image_build.outputs.image }}"

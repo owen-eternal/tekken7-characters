@@ -120,7 +120,7 @@ jobs:
           tags: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
       
       - name: test output
-        run: echo "${{ steps.image_tag.outputs }}"
+        run: echo "${{ steps.image_tag.outputs.tags }}"
 
       # - name: Scan Tekken Image.
       #   uses: snyk/actions/docker@master

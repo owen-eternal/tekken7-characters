@@ -43,103 +43,99 @@ on:
         required: true
 
 jobs:
-  app:
-    runs-on: ubuntu-latest
-    steps:
-      - name: app
-        run: echo "app build"
   infra:
+    needs: app
     runs-on: ubuntu-latest
     steps:
       - name: infra
-        run: echo "infra plan"
-  deploy:
+        env:
+          IMAGE_TAG: ${{ needs.app.outputs.image_tag }}
+        run: echo "$IMAGE_TAG"
+  app:
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.tag }}
+    environment: ${{ inputs.environ }}
+    # services:
+    #   postgres:
+    #     image: postgres
+    #     env:
+    #       POSTGRES_USER: postgres
+    #       POSTGRES_PASSWORD: mysecretpassword
+    #     ports:
+    #       - 5432:5432
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    # env:
+    #   DB_ENGINE: ${{ inputs.database_engine }}
+    #   DB_NAME: ${{ inputs.database_name }}
+    #   DB_PORT: ${{ inputs.database_port }}
+    #   DB_USER: ${{ secrets.database_user }}
+    #   DB_HOST: ${{ secrets.database_host }}
+    #   DB_PASSWORD: ${{ secrets.database_password }}
+    #   DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
+
     steps:
-      - name: deploy
-        run: echo "deploy"
-  # app:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       python-version: [3.8]
-  #   environment: ${{ inputs.environ }}
-  #   services:
-  #     postgres:
-  #       image: postgres
-  #       env:
-  #         POSTGRES_USER: postgres
-  #         POSTGRES_PASSWORD: mysecretpassword
-  #       ports:
-  #         - 5432:5432
-  #       options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #   env:
-  #     DB_ENGINE: ${{ inputs.database_engine }}
-  #     DB_NAME: ${{ inputs.database_name }}
-  #     DB_PORT: ${{ inputs.database_port }}
-  #     DB_USER: ${{ secrets.database_user }}
-  #     DB_HOST: ${{ secrets.database_host }}
-  #     DB_PASSWORD: ${{ secrets.database_password }}
-  #     DJANGO_SECRET_KEY: ${{ secrets.django_secret_key }}
+      # - uses: actions/checkout@v3
 
-  #   steps:
-  #     - uses: actions/checkout@v3
+      - name:
+        id: image_tag
+        run: echo "tag=image:some_image" >> "$GITHUB_OUTPUT"
     
-  #     - name: Set Up Python Environment.
-  #       uses: actions/setup-python@v3
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      # - name: Set Up Python Environment.
+      #   uses: actions/setup-python@v3
+      #   with:
+      #     python-version: 3.8
 
-  #     - name: Install Tekken Dependencies.
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install coverage flake8
-  #         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      # - name: Install Tekken Dependencies.
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install coverage flake8
+      #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-  #     - name: Run Stylistic Checks
-  #       run: if [ flake8 . --count --show-source --statistics ]; then echo 'looking stylish 😎'; fi
+      # - name: Run Stylistic Checks
+      #   run: if [ flake8 . --count --show-source --statistics ]; then echo 'looking stylish 😎'; fi
 
-  #     - name: Run Database Migrations.
-  #       run: python3 manage.py migrate
+      # - name: Run Database Migrations.
+      #   run: python3 manage.py migrate
 
-  #     - name: Run Unit Tests and Generate Coverage report.
-  #       run: |
-  #         coverage run manage.py test
-  #         coverage report
-  #         coverage lcov
+      # - name: Run Unit Tests and Generate Coverage report.
+      #   run: |
+      #     coverage run manage.py test
+      #     coverage report
+      #     coverage lcov
 
-  #     - name: Build + Tag Tekken Image.
-  #       run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
+      # - name: Build + Tag Tekken Image.
+      #   run: docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
 
-  #     - name: Scan Tekken Image.
-  #       uses: snyk/actions/docker@master
-  #       env:
-  #         SNYK_TOKEN: ${{ secrets.snyk_token }}
-  #       with:
-  #         image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
-  #         args: --file=Dockerfile.app
-  #       continue-on-error: true
+      # - name: Scan Tekken Image.
+      #   uses: snyk/actions/docker@master
+      #   env:
+      #     SNYK_TOKEN: ${{ secrets.snyk_token }}
+      #   with:
+      #     image: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+      #     args: --file=Dockerfile.app
+      #   continue-on-error: true
       
-  #     - name: Assume TekkenOIDCRole.
-  #       uses: aws-actions/configure-aws-credentials@v1.7.0
-  #       with:
-  #         role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
-  #         aws-region: ${{ secrets.aws-region }}
+      # - name: Assume TekkenOIDCRole.
+      #   uses: aws-actions/configure-aws-credentials@v1.7.0
+      #   with:
+      #     role-to-assume: ${{ secrets.aws-tekken7-oidc-role-arn }}
+      #     aws-region: ${{ secrets.aws-region }}
 
-  #     - name: Publish Coverage Report.
-  #       if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
-  #       uses: paambaati/codeclimate-action@v5.0.0
-  #       env:
-  #         CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
-  #       with:
-  #         coverageLocations: ./coverage.lcov:lcov
+      # - name: Publish Coverage Report.
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
+      #   uses: paambaati/codeclimate-action@v5.0.0
+      #   env:
+      #     CC_TEST_REPORTER_ID: ${{ secrets.test_reporter_id }}
+      #   with:
+      #     coverageLocations: ./coverage.lcov:lcov
 
-  #     - name: Publish Tekken Image.
-  #       if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
-  #       run: |
-  #         aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
-  #         docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+      # - name: Publish Tekken Image.
+      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push' && inputs.deploy == true
+      #   run: |
+      #     aws ecr get-login-password --region ${{ secrets.aws-region }} | docker login --username AWS --password-stdin ${{ secrets.aws-ecr-registry }}
+      #     docker push ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}

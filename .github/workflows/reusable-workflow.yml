@@ -49,13 +49,13 @@ jobs:
     steps:
       - name: infra
         env:
-          IMAGE_TAG: ${{ needs.app.outputs.tekken_image }}
+          IMAGE_TAG: ${{ needs.app.outputs.tk7image }}
         run: echo "$IMAGE_TAG"
 
   app:
     runs-on: ubuntu-latest
     outputs:
-      tekken_image: ${{ steps.image_build.outputs.tekken_image }}
+      tk7image: ${{ steps.image_build.outputs.tekken_image }}
     environment: ${{ inputs.environ }}
     # services:
     #   postgres:

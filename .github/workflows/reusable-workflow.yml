@@ -112,15 +112,17 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build
-        id: image_tag
+        id: docker_build
         uses: docker/build-push-action@v4
         with:
           file: Dockerfile.app
           context: .
-          tags: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
+          tags: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} 
       
-      - name: test output
-        run: echo "${{ steps.image_tag.outputs.tags }}"
+      - name:
+        run: |
+          echo "metadata ${{ steps.docker_build.outputs.metadata }}"
+          echo "image id ${{ steps.docker_build.outputs.imageid }}"
 
       # - name: Scan Tekken Image.
       #   uses: snyk/actions/docker@master

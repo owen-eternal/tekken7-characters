@@ -51,7 +51,7 @@ jobs:
       - name: infra
         env:
           IMAGE_TAG: ${{ needs.app.outputs.tk7image }}
-        run: docker built -t $IMAGE .
+        run: echo "$IMAGE_TAG"
 
   app:
     runs-on: ubuntu-latest
@@ -108,11 +108,9 @@ jobs:
 
       - name: Build + Tag Tekken Image.
         id: image_build
-        env: 
-          IMAGE: ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}
         run: |
-          docker build -t $IMAGE -f Dockerfile.app .
-          echo "tekken_image=$IMAGE" >> "$GITHUB_OUTPUT"
+          docker build -t ${{ secrets.aws-ecr-registry }}/${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }} -f Dockerfile.app .
+          echo "tekken_image=${{ inputs.aws-ecr-repo }}:${{ inputs.image-version }}" >> "$GITHUB_OUTPUT"
 
       # - name: Scan Tekken Image.
       #   uses: snyk/actions/docker@master
